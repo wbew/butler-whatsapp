@@ -70,6 +70,10 @@ app.post("/", async (c) => {
 const port = 3000;
 console.log(`Server is running on port ${port}`);
 
+// setInterval(async () => {
+//   console.log("Task running at an interval");
+// }, 1000);
+
 serve({
   fetch: app.fetch,
   port,

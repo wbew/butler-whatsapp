@@ -7,15 +7,16 @@
 //   remindAt: z.string().datetime().nullish(),
 // });
 
-export const sendWhatsAppMessage = async (to: string, text: string) => {
-  const phoneNumberId = "705847639280522";
-  const accessToken =
-    "EAAZA7HzFZBBgEBPGtzpGawPHV8K9IZCviLrzMj6ZBhsUIrKuDUtcqUllXAsP8n6DU50M9fujCpNneUCNQKQqpR0RJ62pv0rh2A6nKKAZCd73Il9WwRt1UdKVy0arxJZCXsKzqWhbJPaKMXzZCgVMxFpGTqq9hrDGZB5LaKhSZBzgG6dgxskzZAaeITwqqNIG9Qb5aTNWevPCYkmcmgq9PhZAvgG2PmZClZA3iZBbJKtxzVNnZA48FR7NwZDZD";
+const PHONE_NUMBER_ID = "705847639280522";
+const ACCESS_TOKEN =
+  "EAAZA7HzFZBBgEBPGtzpGawPHV8K9IZCviLrzMj6ZBhsUIrKuDUtcqUllXAsP8n6DU50M9fujCpNneUCNQKQqpR0RJ62pv0rh2A6nKKAZCd73Il9WwRt1UdKVy0arxJZCXsKzqWhbJPaKMXzZCgVMxFpGTqq9hrDGZB5LaKhSZBzgG6dgxskzZAaeITwqqNIG9Qb5aTNWevPCYkmcmgq9PhZAvgG2PmZClZA3iZBbJKtxzVNnZA48FR7NwZDZD";
 
-  await fetch(`https://graph.facebook.com/v18.0/${phoneNumberId}/messages`, {
+export const sendWhatsAppMessage = async (to: string, text: string) => {
+  console.log("Sending WhatsApp message", { to, text });
+  await fetch(`https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
