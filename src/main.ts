@@ -43,7 +43,6 @@ function main() {
   // Receive message
   app.post("/", async (c) => {
     console.log("Webhook received");
-    console.log(c);
 
     const body = await c.req.json();
     const entry = body.entry?.[0];
