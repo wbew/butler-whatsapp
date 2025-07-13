@@ -158,11 +158,11 @@ export const insertReminder = (
 };
 
 export const getReadyReminders = (db: Database.Database): Reminder[] => {
+  const nowUtc = new Date().toISOString(); // always UTC
   const stmt = db.prepare(
-    "SELECT * FROM reminders WHERE remind_at <= CURRENT_TIMESTAMP AND completed IS FALSE"
+    "SELECT * FROM reminders WHERE remind_at <= ? AND completed IS FALSE"
   );
-  const reminders = stmt.all() as Reminder[];
-
+  const reminders = stmt.all(nowUtc) as Reminder[];
   return reminders;
 };
 

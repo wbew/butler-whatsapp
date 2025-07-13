@@ -60,4 +60,4 @@ Thumbs.db
 *.temp
 
 # Database files
-./data
+/data
