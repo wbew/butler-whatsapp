@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/main.ts",
-    "build": "pnpm install && tsc",
+    "build": "rm -rf node_modules && pnpm install && tsc",
     "start": "node dist/main.js"
   },
   "keywords": [],
@@ -25,10 +25,5 @@
     "@types/node": "24.0.13",
     "tsx": "^4.7.0",
     "typescript": "^5.8.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
   }
 }
