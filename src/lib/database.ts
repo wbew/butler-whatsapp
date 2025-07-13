@@ -23,8 +23,24 @@ function getDatabasePath(): string {
   }
 }
 
+export type Message = {
+  id: number;
+  user_id: string;
+  content: string;
+  timestamp: string;
+  created_at: string;
+};
+
+export type InsertMessageResult = {
+  id: number;
+  user_id: string;
+  content: string;
+  timestamp: string;
+  created_at: string;
+};
+
 // Database schema initialization
-function initializeDatabase(): Database.Database {
+export function initializeDatabase(): Database.Database {
   // Create database connection
   const dbPath = getDatabasePath();
   const db = new Database(dbPath);
@@ -63,3 +79,94 @@ function initializeDatabase(): Database.Database {
   console.log("Database schema initialized successfully");
   return db;
 }
+
+export const insertMessage = (
+  db: Database.Database,
+  message: string,
+  userId: string
+): InsertMessageResult => {
+  try {
+    const stmt = db.prepare(
+      `INSERT INTO messages (user_id, content) VALUES (?, ?) RETURNING *`
+    );
+    const result = stmt.get(userId, message) as InsertMessageResult;
+    return result;
+  } catch (error) {
+    throw new Error(
+      `Failed to insert message: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  }
+};
+
+export const getMessages = (
+  db: Database.Database,
+  limit: number = 50
+): Message[] => {
+  try {
+    const stmt = db.prepare(
+      `SELECT * FROM messages ORDER BY timestamp DESC LIMIT ?`
+    );
+    const messages = stmt.all(limit) as Message[];
+    return messages;
+  } catch (error) {
+    throw new Error(
+      `Failed to get messages: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  }
+};
+
+export type Reminder = {
+  id: number;
+  user_id: string;
+  content: string;
+  remind_at: string;
+  completed: boolean;
+  created_at: string;
+};
+
+export type InsertReminderData = {
+  content: string;
+  remind_at: string;
+};
+
+export const insertReminder = (
+  db: Database.Database,
+  userId: string,
+  reminder: InsertReminderData
+): Reminder => {
+  try {
+    const stmt = db.prepare(
+      `INSERT INTO reminders (user_id, content, remind_at) VALUES (?, ?, ?) RETURNING *`
+    );
+    const result = stmt.get(
+      userId,
+      reminder.content,
+      reminder.remind_at
+    ) as Reminder;
+    return result;
+  } catch (error) {
+    throw new Error(
+      `Failed to insert reminder: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  }
+};
+
+export const getReadyReminders = (db: Database.Database): Reminder[] => {
+  const stmt = db.prepare(
+    "SELECT * FROM reminders WHERE remind_at <= CURRENT_TIMESTAMP AND completed IS FALSE"
+  );
+  const reminders = stmt.all() as Reminder[];
+
+  return reminders;
+};
+
+export const markReminderAsCompleted = (db: Database.Database, id: number) => {
+  const stmt = db.prepare("UPDATE reminders SET completed = TRUE WHERE id = ?");
+  stmt.run(id);
+};
