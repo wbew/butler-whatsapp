@@ -166,6 +166,22 @@ export const getReadyReminders = (db: Database.Database): Reminder[] => {
   return reminders;
 };
 
+export const getPendingReminders = (db: Database.Database): Reminder[] => {
+  try {
+    const stmt = db.prepare(
+      "SELECT * FROM reminders WHERE completed IS FALSE ORDER BY remind_at ASC"
+    );
+    const reminders = stmt.all() as Reminder[];
+    return reminders;
+  } catch (error) {
+    throw new Error(
+      `Failed to get pending reminders: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  }
+};
+
 export const markReminderAsCompleted = (db: Database.Database, id: number) => {
   const stmt = db.prepare("UPDATE reminders SET completed = TRUE WHERE id = ?");
   stmt.run(id);

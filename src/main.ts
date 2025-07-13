@@ -9,6 +9,7 @@ import {
   initializeDatabase,
   insertMessage,
   insertReminder,
+  getPendingReminders,
   Message,
 } from "./lib/database";
 import Database from "better-sqlite3";
@@ -59,6 +60,18 @@ function main() {
     }
 
     return c.text("OK");
+  });
+
+  // Get all pending reminders
+  app.get("/reminders", async (c) => {
+    try {
+      const reminders = getPendingReminders(db);
+      return c.json({ reminders });
+    } catch (error) {
+      console.error("Error fetching reminders:", error);
+      c.status(500);
+      return c.json({ error: "Failed to fetch reminders" });
+    }
   });
 
   const port = 3000;
