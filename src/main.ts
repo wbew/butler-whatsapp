@@ -56,7 +56,6 @@ function main() {
 
       if (text) {
         handleIncomingMessage(from, db, ai, text);
-        sendWhatsAppMessage(from, text);
       }
     }
 
